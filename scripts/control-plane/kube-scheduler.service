@@ -1,0 +1,12 @@
+[Unit]
+Description=Kubernetes Scheduler
+Documentation=https://github.com/kubernetes/kubernetes
+
+[Service]
+EnvironmentFile=/etc/kubernetes/kube-apiserver.env
+ExecStart=/usr/local/bin/kube-scheduler $V $KUBE_SCHEDULER_CONFIG
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

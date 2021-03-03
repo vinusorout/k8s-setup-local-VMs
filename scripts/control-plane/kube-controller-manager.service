@@ -1,0 +1,12 @@
+[Unit]
+Description=Kubernetes Controller Manager
+Documentation=https://github.com/kubernetes/kubernetes
+
+[Service]
+EnvironmentFile=/etc/kubernetes/kube-apiserver.env
+ExecStart=/usr/local/bin/kube-controller-manager $BIND_ADDRESS $CLUSTER_CIDR $V $CLUSTER_NAME $SERVICE_CLUSTER_IP_RANGE $USE_SERVICE_ACCOUNT_CREDENTIALS $CLUSTER_SIGNING_CRT $CLUSTER_SIGNING_KEY_FILE $KUEB_CONTROLLER_MANGER_KUBECONFIG $LEADER_ELECT $ROOT_CA_FILE $SERVICE_ACCOUNT_PRIVATE_KEY_FILE
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

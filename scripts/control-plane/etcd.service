@@ -1,0 +1,13 @@
+[Unit]
+Description=etcd
+Documentation=https://github.com/coreos
+
+[Service]
+EnvironmentFile=/etc/kubernetes/etcd.env
+Type=notify
+ExecStart=/usr/local/bin/etcd
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
