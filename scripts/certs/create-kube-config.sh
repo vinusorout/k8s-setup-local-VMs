@@ -51,6 +51,7 @@ kubectl config use-context default --kubeconfig=admin.kubeconfig
 
 
 # cretae a data encription key used by kube API server. The kube-apiserver process accepts an argument --encryption-provider-config that controls how API data is encrypted in etcd.
+# make sure you generate this only one time and dont play again and again while creating the control plane, if you somemhow change this your kubernetes will behave abnormally
 ENCRYPTION_KEY=$(head -c 32 /dev/urandom | base64)
 cat > encryption-data-config.yaml <<EOF
 kind: EncryptionConfig

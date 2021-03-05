@@ -1,5 +1,5 @@
 # Generating all the required Certificates and Kubeconfig files
-Kubernetes requires PKI certificates for authentication over TLS, to communicate between control plance and its workers nodes, in this lab we will generate all the required certicates using the CFSL tool.
+Kubernetes requires PKI certificates for authentication over TLS, to communicate between control plance and its workers nodes, in this lab we will generate all the required certicates using the OPENSSL tool.
 
 Kubernetes requires PKI for the following operations:
 * Client certificates for the kubelet to authenticate to the API server
@@ -10,10 +10,17 @@ Kubernetes requires PKI for the following operations:
 * Client certificate/kubeconfig for the controller manager to talk to the API server
 * Client certificate/kubeconfig for the scheduler to talk to the API server.
 
+In kubernetes the authentication is managed by the certificates, the subject name(CN) of the certificates is consider as the user name, the subject name(O) is the group of the user belongs to.
+We are setting the kubernetes authorization setting with RBAC, to check if a use in a group has some permission use this command:
+```
+kubectl auth can-i get pods --as=admin --as-group=system:masters
+```
 
 ## Generate all required certificates:
 
 To generate nodes certificates update following variables in file [create-all-certs.sh](scripts/certs/create-all-certs.sh)
+
+NOTE: In case you face Cant load ./.rnd into RNG error then Removing (or commenting out) RANDFILE = $ENV::HOME/.rnd from /etc/ssl/openssl.cnf
 
 ```
 VMS=("kcontrol" "kworker") # all the controller and worker nodes name(hostname), seperated by space.
@@ -57,14 +64,13 @@ The "kubectl" command line tool used to manage the clusters, users, namespaces a
 Run [create-kube-config.sh](../scripts/certs/create-kube-config.sh) in same directory where all the root, serveres' certificates and keys available. This script will install kubectl in client machine and will generate the required kube config files.
 
 
+For client machine(we are executing commands) Copy the new generated admin.kubeconfig file to $HOME/.kube/config and edit it, update the ip address of server, make it the ip address of control plane instead of 127.0.01
 
-Now we are done with the certificates and configs let's start with [setting up control plane](02-setup-control-plane.md)
-
-For client machine(we are executing commands) Copy the new generated admin.kubeconfig file to $HOME/.kube and edit it o update the ip address of server, make it the ip address of control plane instead of 127.0.01
-
-Now run this commad
+In case you are not coping the file at $HOME/.kube/config then you can use this environment variable:
 ```
-export KUBECONFIG=$KUBECONFIG:$HOME/.kube/admin.kubeconfig
+export KUBECONFIG=$HOME/.kube/admin.kubeconfig
 ```
 
 This is done to avoid typing the --kubeconfig=admin.kubeconfig while running kubectl commands on client machine.
+
+Now we are done with the certificates and configs let's start with [setting up control plane](02-setup-control-plane.md)

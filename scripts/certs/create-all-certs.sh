@@ -12,6 +12,12 @@ rm -f ./certificates/*
 echo "Current dir is"
 echo $PWD
 
+# in kubernetes the authentication is managed by the certificates, the subject name(CN) of the certificates is consider as the user name
+# the subject name(O) is the group of the user belongs to
+# we are setting the kubernetes authorization setting with RBAC
+# to check if a use in a group has some permission use this command:
+#kubectl auth can-i get pods --as=admin --as-group=system:masters
+
 #admin client certificate
 admin_key_file="$PWD/certificates/admin-key.pem"
 if [ -f "${admin_key_file}" ]; then

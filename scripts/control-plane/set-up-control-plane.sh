@@ -5,7 +5,7 @@ KUBERNETES_CLUSTER_SERVICE_IP=10.32.0.1 #Always the first IP address of the rang
 VM_SSH_OPTIONS="-oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null -oUser=username" # replace -oUser with username of the nodes which has admin rights on all the nodes
 ROOT_CA_FILE_NAME="ca.pem"
 ROOT_CA_KEY_FILE_NAME="ca-key.pem"
-SERVICE_CLUSTER_IP_RANGE="10.32.0.0/24" # This is the range of ips, used by kubernetes to assign ip address to its services, the first ip is reserved for the api server and 10th ip is reserved for DNS
+SERVICE_CLUSTER_IP_RANGE="10.32.0.0/24" # This is the range of ips, used by kubernetes to assign ip address to its services like DNS and to user defined services (ClusterIP, NodePort, Loadbalancer etc), the first ip is reserved for the api server and 10th ip is reserved for DNS
 SERVICE_NODE_PORT_RANGE="1-32767" # Default is 30000-32767, but we are using from 1, bacause for bare-metal we will use port 80
 CLUSTER_CIDR="10.200.0.0/16" # this is the ip range used by your cluster for assigning pods ip, for each worker we need to assign a POD_CIDR ex 10.200.1.0/24 that will be a subnet of this CLUSTER_CIDR
 CLUSTER_NAME="my-kubernetes-cluster"

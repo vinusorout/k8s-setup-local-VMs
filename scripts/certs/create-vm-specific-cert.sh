@@ -44,7 +44,7 @@ function create-vm-specific-cert(){
         # kube api server certificate, will also be used by etcd
         openssl req -new -key "${key_file}" \
             -out "$CERTIFICATE_TEMP_DIR/${current_hostname}-kube-api-server.csr" \
-            -subj "/C=US/ST=None/L=None/O=Kubernetes/CN=${current_hostname}" \
+            -subj "/C=US/ST=None/L=None/O=Kubernetes/CN=kubernetes" \
             -config "$CERTIFICATE_TEMP_DIR/${current_hostname}_api_server_openssl.conf"
         
         # kube service account certificate
