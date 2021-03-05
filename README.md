@@ -20,7 +20,7 @@ If you go through the scripts, you will find more details and specific notes for
 1. [Generate Required Certficates and Kubeconfigs](docs/01-generate-certificates.md)
 2. [Set up Control Plane](docs/02-setup-control-plane.md)
 3. [Set up Worker](docs/03-setup-worker.md)
-4. [Set up DNS and expose to external world](docs/04-setup-dns-and-expose-services.md)
+4. [Set up DNS and expose to external world with KONG and NGINX](docs/04-setup-dns-and-expose-services.md)
 
 So let's start: [Let's start with generating the certificates](docs/01-generate-certificates.md)
 
