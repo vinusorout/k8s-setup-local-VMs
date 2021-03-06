@@ -10,8 +10,9 @@ Kubernetes requires PKI for the following operations:
 * Client certificate/kubeconfig for the controller manager to talk to the API server
 * Client certificate/kubeconfig for the scheduler to talk to the API server.
 
-In kubernetes the authentication is managed by the certificates, the subject name(CN) of the certificates is consider as the user name, the subject name(O) is the group of the user belongs to.
-We are setting the kubernetes authorization setting with RBAC, to check if a use in a group has some permission use this command:
+## Why certificates
+In kubernetes the authentication is managed by the certificates, the subject name(CN) of the certificates is consider as the user name, the subject name(O) is the group of the user belongs to. So each component of kubernetes will use its certificate as user details to call other component, for example when we execute the kubectl logs for a pod command, kubectl call the API server and then the API server contact the kubelet of worker, API server creates a valid request using its certificates and send it to worker node kubelet, then the kublet verify the requests as per the certificates.
+We are setting the kubernetes authorization setting with RBAC, to check if a user in a group has some permission, use this command:
 ```
 kubectl auth can-i get pods --as=admin --as-group=system:masters
 ```
@@ -57,6 +58,13 @@ openssl x509 -req -in kcontrol-kube-api-server.csr -CA ca.pem -CAkey ca-key.pem 
 openssl x509 -req -in kcontrol-service-account.csr -CA ca.pem -CAkey ca-key.pem -CAcreateserial -out kcontrol-service-account-crt.pem -days 3650 -extensions ssl_client -extfile kcontrol_api_server_openssl.conf
 
 ```
+
+## Why kubeconfig
+Kubeconfigs files are used to identify the API server, these files has important information like server ip address, certificates for authentication purpose.Lets understand follwoing two kubeconfigs:
+* **admin.kubeconfig** : This kubeconfig file is used by the "kubectl" binary to run kubectl commands. Kubectl sends the command request to API server, identified by the --server address in the kubeconfig files and the certificates embadded in the kubeconfig file.
+* **kubelet.kubeconfig**: This kubeconfig file is used by kubelet binary, when we first setuo the worker node, kubelet identify the API server using the --server value in its kubeconfig files. Once it call the API server, API server add the worker to its nodes and save its informations like IP etc future comunications.
+
+NOTE: for local purpose we are using the control plane as --server ip in kubeconfig files, on clouds it is the loadbalancer ip which routes the traffic to the control planes.
 
 ## Generate kubeconfig files:
 The "kubectl" command line tool used to manage the clusters, users, namespaces adn others, uses kubeconfig files to find the information it needs to choose a cluster and communicate with the API server of a cluster. By default, "kubectl" looks for file named config in the "$HOME/.kube" directory.
