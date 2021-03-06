@@ -63,4 +63,4 @@ Create an ingress rule:
 kubectl apply -f httpbin-ingress.yaml
 ```
 
-Now open your browser and navigate to <worker_node_is>/httpbin
+Now open your browser and navigate to <worker_node_ip>/httpbin
