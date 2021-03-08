@@ -27,7 +27,7 @@ Now we need to expose the kong-proxy service, for this we will create a new depl
 ```
 http {
         upstream kong_gateway_proxy {
-                server kong-proxy.kong.svc.cluster.local:80;
+                server kong-proxy.kong.svc.cluster.local:8000;
         }
         server {
                 listen 80 default;
