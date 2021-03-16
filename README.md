@@ -7,7 +7,7 @@ We will setup a single control plane and single worker cluster.
 * Kubernetes version 1.20.4
 * 1 Control Plane and 1 Worker node
 * ETCD 3.4.14
-* cni 0.9.1
+* cni 0.9.1 (with bridge plugin)
 * Kong Ingress Controller 1.1.x
 
 ## Prerequisites

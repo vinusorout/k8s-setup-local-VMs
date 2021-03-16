@@ -3,9 +3,9 @@
 Using these scripts, we will setup the control plane of the cluster. These scripts will install follwoing components:
 * **etcd**: A distributed, consistent key-value store system, Kubernetes uses etcd to store all its data – its configuration data, its state, and its metadata. Kubernetes is a distributed system, so it needs a distributed data store like etcd
 
-#### Why ETCD
-In a high available cluster, we configure multiple control planes with multiple etcd instances(normally on same machine). ETCD keeps replicating data from one server to other server. That is why when we send a pod creation call to one control plane's API server, it saves the data in etcd server and then the etcd replicate the same data to other servers, this way each control planes stay in sync.
-Kubernetes API server keep tracing of the current state of the cluster as per the ETCD data. If somehow worker nodes destroy a pod, then kube API server match its state as per the data from the ETCD database and then do all the needfull to bring the cluster states back as per the state saved in etcd.
+    ### Why ETCD
+    In a high available cluster, we configure multiple control planes with multiple etcd instances(normally on same machine). ETCD keeps replicating data from one server to other server. That is why when we send a pod creation call to one control plane's API server, it saves the data in etcd server and then the etcd replicate the same data to other servers, this way each control planes stay in sync.
+    Kubernetes API server keep tracing of the current state of the cluster as per the ETCD data. If somehow worker nodes destroy a pod, then kube API server match its state as per the data from the ETCD database and then do all the needfull to bring the cluster states back as per the state saved in etcd.
 
 * **Kubenetes API server**: The API server is the gateway to the Kubernetes cluster. This allow applications to communicate with one another. It is the front-end for the Kubernetes control plane. It is designed to scale horizontally — that is, it scales by deploying more instances. The users, management devices, and command line interfaces all talk to the API server to interact with the Kubernetes cluster.
 
