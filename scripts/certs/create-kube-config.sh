@@ -6,12 +6,12 @@ sudo ./install-kubectl.sh
 # which enable Kubernetes clients(kubelet and kupe-proxy of workers, kubectl of clients etc) to locate and authenticate to the Kubernetes API Servers.
 
 # NOTE: Here we are considering only one control and one/multi workers nodes. If you need multiple control planes in a single cluster, you need a load balancer fuctionality, which will redirect the traffic to all the control planes.
-CLUSTER_ACCES_ADDRESS=192.168.71.137 #Single control machine IP address Or loadbalancer IP address in case of multi control planes
-CONTROL_PLANE_VMS=("kcontrol") # space seperated control plane vms hostnames
-WORKER_VMS=("kworker") # space seperated worker vms hostnames
+CLUSTER_ACCES_ADDRESS=192.168.2.51 #Single control machine IP address Or loadbalancer IP address in case of multi control planes
+CONTROL_PLANE_VMS=("kmaster-1") # space seperated control plane vms hostnames
+WORKER_VMS=("kworker-1") # space seperated worker vms hostnames
 ROOT_CA_FILE_NAME="ca.pem" # Root CA certificate file name
 ROOT_CA_KEY_FILE_NAME="ca-key.pem"
-VM_SSH_OPTIONS="-oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null -oUser=username" # replace -oUser with username of the nodes which has admin rights on all the nodes
+VM_SSH_OPTIONS="-oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null -oUser=vagrant" # replace -oUser with username of the nodes which has admin rights on all the nodes
 CLUSTER_NAME="my-kubernetes-cluster"
 
 # Kubelet config files

@@ -7,6 +7,7 @@ SERV_IP_RANGE=${4:-}
 NODE_PORT_RANGE=${5:-}
 CIDR=${6:-}
 CLUSTR_NAME=${7:-}
+IFNAME=${8:-}
 
 api_server_file=/usr/local/bin/kube-apiserver
 
@@ -15,9 +16,9 @@ function install-cotrol-plane-components(){
         echo "${api_server_file} exists."
     else
         echo "${api_server_file} does not exist."
-        CURRENT_HOST_IP=$(ip addr | grep -m 1 'state UP' -A2 | tail -n1 | awk '{print $2}' | cut -f1  -d'/')
+        CURRENT_HOST_IP=$(ip -4 addr show $IFNAME | grep "inet" | head -1 |awk '{print $2}' | cut -d/ -f1)
         current_hostname="$(hostname)"
-        echo "Variables on control plane ${current_hostname}: ${CONTROL_PLANE_VM}, ${ROOT_CA_FILE_NAME}, ${ROOT_CA_KEY_FILE_NAME}, ${SERV_IP_RANGE}, ${NODE_PORT_RANGE}, ${CIDR}, ${CLUSTR_NAME}"
+        echo "Variables on control plane ${current_hostname} with ip ${CURRENT_HOST_IP}: ${CONTROL_PLANE_VM}, ${ROOT_CA_FILE_NAME}, ${ROOT_CA_KEY_FILE_NAME}, ${SERV_IP_RANGE}, ${NODE_PORT_RANGE}, ${CIDR}, ${CLUSTR_NAME}"
 
         echo "Downloading control plane binaries on ${current_hostname}"
         wget -q --show-progress --https-only --timestamping \
@@ -94,8 +95,8 @@ function install-cotrol-plane-components(){
 
 install-cotrol-plane-components
 
-echo "sleeping the commands for 120 seconds"
-sleep 120s
+echo "sleeping the commands for 60 seconds"
+sleep 60s
 
 # configure RBAC permissions to allow the Kubernetes API Server to access the Kubelet API on each worker node.
 # Access to the Kubelet API is required for retrieving metrics, logs, and executing commands in pods.

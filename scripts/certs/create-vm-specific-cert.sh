@@ -2,7 +2,8 @@
 
 VM_ROLE=${1:-}
 KUBERNETES_CLUSTER_SERVICE_IP=${2:-}
-KUBERNETES_EXTERNAL_DNS=${3:-}
+IFNAME=${3:-}
+KUBERNETES_EXTERNAL_DNS=${4:-}
 
 CERTIFICATE_TEMP_DIR=~/cert-final
 rm -rfv "$CERTIFICATE_TEMP_DIR"
@@ -12,7 +13,10 @@ declare -a EXTRA_SANS
 function create-vm-specific-cert(){
     current_hostname="$(hostname)"
     current_host_FQDN="$(hostname -f)"
-    current_host_ip=$(ip addr | grep -m 1 'state UP' -A2 | tail -n1 | awk '{print $2}' | cut -f1  -d'/')
+    echo $IFNAME
+    echo "Next"
+    current_host_ip=$(ip -4 addr show $IFNAME | grep "inet" | head -1 |awk '{print $2}' | cut -d/ -f1)
+    echo "current machine is $current_hostname with ip $current_host_ip"
     key_file="$CERTIFICATE_TEMP_DIR/${current_hostname}-key.pem"
     if [ "$VM_ROLE" = "CP" ]; then
         EXTRA_SANS=(

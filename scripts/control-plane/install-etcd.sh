@@ -2,6 +2,7 @@
 
 CONTROL_PLANE_VM=${1:-}
 ROOT_CA_FILE_NAME=${2:-}
+IFNAME=${3:-}
 
 etcd_file=/etc/systemd/system/etcd.service
 
@@ -10,7 +11,7 @@ function install-etcd(){
         echo "$etcd_file exists."
     else 
         echo "$etcd_file does not exist."
-        CURRENT_HOST_IP=$(ip addr | grep -m 1 'state UP' -A2 | tail -n1 | awk '{print $2}' | cut -f1  -d'/')
+        CURRENT_HOST_IP=$(ip -4 addr show $IFNAME | grep "inet" | head -1 |awk '{print $2}' | cut -d/ -f1)
         current_hostname="$(hostname)"
         ETCD_NAME=$(hostname -s)
 

@@ -1,16 +1,19 @@
 #!/bin/bash
 
-VMS=("kcontrol" "kworker") # all the controller and worker nodes name(hostname), seperated by space.
+VMS=("kmaster-1" "kworker-1") # all the controller and worker nodes name(hostname), seperated by space.
 VM_ROLES=("CP" "WR") # all the nodes roles CP for Control Plane and WR for worker, seperated by space.
 KUBERNETES_CLUSTER_SERVICE_IP=10.32.0.1 #Always the first IP address of the range we provide(--service-cluster-ip-range=10.32.0.0/24(example can be changed as per requirements)) in for kube api server while creating control plane
 KUBERNETES_EXTERNAL_DNS="" # Domain name if any of your Control Plane node.
-VM_SSH_OPTIONS="-oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null -oLogLevel=ERROR -oUser=username" # replace -oUser with username of the nodes which has admin rights on all the nodes
+VM_SSH_OPTIONS="-oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null -oLogLevel=ERROR -oUser=vagrant" # replace -oUser with username of the nodes which has admin rights on all the nodes
+IFNAME="enp0s8" # the interface name to be use to get the IP address of VM, if only one interface then can be leave blank
 
 mkdir -p certificates
 rm -f ./certificates/*
 
 echo "Current dir is"
 echo $PWD
+
+echo "IFNAME is: $IFNAME"
 
 # in kubernetes the authentication is managed by the certificates, the subject name(CN) of the certificates is consider as the user name
 # the subject name(O) is the group of the user belongs to
@@ -76,7 +79,7 @@ for vm in "${VMS[@]}"; do
     # run command to create node specific certificates
     ssh $VM_SSH_OPTIONS -t "$vm" "
         sudo chmod +x ~/create-vm-specific-cert.sh
-        sudo ~/create-vm-specific-cert.sh $vm_role $KUBERNETES_CLUSTER_SERVICE_IP $KUBERNETES_EXTERNAL_DNS"
+        sudo ~/create-vm-specific-cert.sh $vm_role $KUBERNETES_CLUSTER_SERVICE_IP $IFNAME $KUBERNETES_EXTERNAL_DNS"
     
     # Copy the generated certificates and keys on client machines(current working machine)
     scp $VM_SSH_OPTIONS "${vm}:~/cert-final/*" ./certificates/

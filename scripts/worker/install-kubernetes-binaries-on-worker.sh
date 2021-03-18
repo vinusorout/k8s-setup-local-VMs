@@ -4,6 +4,7 @@ POD_CIDR=${1:-}
 CLUSTER_CIDR=${2:-}
 ROOT_CA_FILE_NAME=${3:-}
 CLUSTER_DNS_IP=${4:-} # Always the 10th address of serive range for example 10.32.0.10 of 10.32.0.0/24
+IFNAME=${5:-}
 
 kubelet_server_file=/usr/local/bin/kubelet 
 
@@ -12,9 +13,9 @@ function install-cotrol-plane-components(){
         echo "${kubelet_server_file} exists."
     else
         echo "${kubelet_server_file} does not exist."
-        CURRENT_HOST_IP=$(ip addr | grep -m 1 'state UP' -A2 | tail -n1 | awk '{print $2}' | cut -f1  -d'/')
+        CURRENT_HOST_IP=$(ip -4 addr show $IFNAME | grep "inet" | head -1 |awk '{print $2}' | cut -d/ -f1)
         current_hostname="$(hostname)"
-        echo "Variables on worker ${current_hostname}: ${POD_CIDR}, ${CLUSTER_CIDR}, ${ROOT_CA_FILE_NAME}, ${CLUSTER_DNS_IP}"
+        echo "Variables on worker ${current_hostname} with IP ${CURRENT_HOST_IP}: ${POD_CIDR}, ${CLUSTER_CIDR}, ${ROOT_CA_FILE_NAME}, ${CLUSTER_DNS_IP}"
 
         echo "Downloading worker binaries on ${current_hostname}"
         wget -q --show-progress --https-only --timestamping \
