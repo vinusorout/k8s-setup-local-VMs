@@ -39,6 +39,36 @@ Using these scripts, we will setup the worker nodes of the cluster. These script
     ```
     we can use other plugins like **weave** etc
 
+    ### CNI with weave plugin
+    To use weave plugin just install the **CNI** binaries, and don't create conf files under '/etc/cni/net.d', as the weave pod's containers will create this file by its own, you can create this too if you want.
+    Sample CNI file for weave is:
+    ```json
+    {
+        "cniVersion": "0.3.0",
+        "name": "weave",
+        "plugins": [
+            {
+                "name": "weave",
+                "type": "weave-net",
+                "hairpinMode": true
+            },
+            {
+                "type": "portmap",
+                "capabilities": {"portMappings": true},
+                "snat": true
+            }
+        ]
+    }
+    ```
+
+    Now after installing the kubelet and kube-proxy, once your worker node is ready, create the weave deployments using following command:
+    ```shell
+    kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')"
+
+    ```
+
+    To work with some kubernetes functionalities like **NetworkPolicy**, we need some networking solutions which supports this, **weave** is one of them.
+
 * **kubelet** Kubelet is the agent that runs on each node in the cluster. The agent is responsible for making sure that the containers are running on the nodes as expected.
 
 * **kube-proxy** This is a proxy service which runs on each node and helps in making services available to the external host. It helps in forwarding the request to correct containers and is capable of performing primitive load balancing. It makes sure that the networking environment is predictable and accessible and at the same time it is isolated as well.
