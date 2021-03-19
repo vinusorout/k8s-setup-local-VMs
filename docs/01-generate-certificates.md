@@ -24,11 +24,13 @@ To generate nodes certificates update following variables in file [create-all-ce
 NOTE: In case you face Cant load ./.rnd into RNG error then Removing (or commenting out) RANDFILE = $ENV::HOME/.rnd from /etc/ssl/openssl.cnf
 
 ```
-VMS=("kcontrol" "kworker") # all the controller and worker nodes name(hostname), seperated by space.
+VMS=("kmaster-1" "kworker-1") # all the controller and worker nodes name(hostname), seperated by space.
 VM_ROLES=("CP" "WR") # all the nodes roles CP for Control Plane and WR for worker, seperated by space.
-KUBERNETES_CLUSTER_SERVICE_IP=10.32.0.1 #Always the first IP address of the range we provide(--service-cluster-ip-range=10.32.0.0/24(example can be changed as per requirements)) in for kube api server while creating control plane.
+KUBERNETES_CLUSTER_SERVICE_IP=10.32.0.1 #Always the first IP address of the range we provide(--service-cluster-ip-range=10.32.0.0/24(example can be changed as per requirements)) in for kube api server while creating control plane
 KUBERNETES_EXTERNAL_DNS="" # Domain name if any of your Control Plane node.
-VM_SSH_OPTIONS="-oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null -oLogLevel=ERROR -oUser=username" # replace -oUser with username of the nodes which has admin rights on all the nodes
+VM_SSH_OPTIONS="-oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null -oLogLevel=ERROR -oUser=vagrant" # replace -oUser with username of the nodes which has admin rights on all the nodes
+IFNAME="enp0s8" # the interface name to be use to get the IP address of VM, if only one interface then can be leave blank
+
 ```
 
 Finally run this file in client machine(your local machine). This will generate all the required csr files for all the nodes.Now we need to sign the certificates by either your CA authority or self signed. Lets self signed as of now:
@@ -48,14 +50,14 @@ OR
 # for without .conf, like admin.csr
 openssl x509 -req -in csr_file_name.csr -CA ca.pem -CAkey ca-key.pem -CAcreateserial -out new_certificate_name.pem -days 3650 -extensions ssl_client
 
-for kcontrol and kworker following are the commands:
+for kmaster-1 and kworker-1 following are the commands:
 openssl x509 -req -in admin.csr -CA ca.pem -CAkey ca-key.pem -CAcreateserial -out admin-crt.pem -days 3650 -extensions ssl_client
 openssl x509 -req -in kube-control-manager.csr -CA ca.pem -CAkey ca-key.pem -CAcreateserial -out kube-control-manager-crt.pem -days 3650 -extensions ssl_client
 openssl x509 -req -in kube-proxy.csr -CA ca.pem -CAkey ca-key.pem -CAcreateserial -out kube-proxy-crt.pem -days 3650 -extensions ssl_client
 openssl x509 -req -in kube-scheduler.csr -CA ca.pem -CAkey ca-key.pem -CAcreateserial -out kube-scheduler-crt.pem -days 3650 -extensions ssl_client
-openssl x509 -req -in kworker-kubelet.csr -CA ca.pem -CAkey ca-key.pem -CAcreateserial -out kworker-kubelet-crt.pem -days 3650 -extensions ssl_client -extfile kworker_openssl.conf
-openssl x509 -req -in kcontrol-kube-api-server.csr -CA ca.pem -CAkey ca-key.pem -CAcreateserial -out kcontrol-kube-api-server-crt.pem -days 3650 -extensions ssl_client -extfile kcontrol_api_server_openssl.conf
-openssl x509 -req -in kcontrol-service-account.csr -CA ca.pem -CAkey ca-key.pem -CAcreateserial -out kcontrol-service-account-crt.pem -days 3650 -extensions ssl_client -extfile kcontrol_api_server_openssl.conf
+openssl x509 -req -in kworker-1-kubelet.csr -CA ca.pem -CAkey ca-key.pem -CAcreateserial -out kworker-1-kubelet-crt.pem -days 3650 -extensions ssl_client -extfile kworker-1_openssl.conf
+openssl x509 -req -in kmaster-1-kube-api-server.csr -CA ca.pem -CAkey ca-key.pem -CAcreateserial -out kmaster-1-kube-api-server-crt.pem -days 3650 -extensions ssl_client -extfile kmaster-1_api_server_openssl.conf
+openssl x509 -req -in kmaster-1-service-account.csr -CA ca.pem -CAkey ca-key.pem -CAcreateserial -out kmaster-1-service-account-crt.pem -days 3650 -extensions ssl_client -extfile kmaster-1_api_server_openssl.conf
 
 ```
 

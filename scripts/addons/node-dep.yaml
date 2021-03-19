@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: node
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: node
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: node
+        version: v1
+    spec:
+      containers:
+      - image: docker.io/itvinay12/node-image
+        imagePullPolicy: IfNotPresent
+        name: node
+        ports:
+        - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: node
+  labels:
+    app: node
+    service: node
+spec:
+  ports:
+  - name: http
+    port: 8080
+    targetPort: 8080
+  selector:
+    app: node
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: node-ingress
+  annotations:
+    kubernetes.io/ingress.class: kong
+    konghq.com/strip-path: "true"
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /node
+        pathType: Prefix
+        backend:
+          service:
+            name: node
+            port:
+              number: 8080

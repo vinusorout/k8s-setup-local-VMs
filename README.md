@@ -16,6 +16,19 @@ We will setup a single control plane and single worker cluster.
 
 If you go through the scripts, you will find more details and specific notes for commands used
 
+### Compute Resources:
+To create VMs use the **vagrant** and **virtualbox** tools, after installing these tools run follwoing command in the base directorty of this repo:
+```
+vagrant up
+```
+
+This will create follwoing VMs:
+- kclient (where we will execute the scripts)
+- kmaster-1 (for master/control plane node)
+- kworker-1 (for worker node)
+
+**Note** if you decide to update the IP or Name of the VMs in [Vagrantfile](Vagrantfile), then make sure to update the file [update-hosts.sh](update-hots.sh) accordingly. And the VMs created by vagrant has default user name as vagrant and password as vagrant, also the root password is vagrant.
+
 ## TOC
 1. [Generate Required Certficates and Kubeconfigs](docs/01-generate-certificates.md)
 2. [Set up Control Plane](docs/02-setup-control-plane.md)

@@ -83,16 +83,11 @@ Note the server url in nginx.conf file **kong-proxy.kong.svc.cluster.local:80**,
 To set all this run [set-up-dns-kong-and-expose-to-world.sh](../scripts/addons/set-up-dns-kong-and-expose-to-world.sh)
 
 ## Testing
-For testing purpose lets create httpbin service and deployment(yamls files are availabel in addons folder).
+For testing purpose lets create a node service and deployment(yamls files are available in addons folder).
 
 Run follwoing command:
 ```
-kubectl apply -f httpbin.yaml
+kubectl apply -f node-dep.yaml
 ```
 
-Create an ingress rule:
-```
-kubectl apply -f httpbin-ingress.yaml
-```
-
-Now open your browser and navigate to <worker_node_ip>/httpbin
+Now open your browser and navigate to <worker_node_ip>/node
