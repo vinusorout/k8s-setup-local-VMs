@@ -27,6 +27,11 @@ This will create follwoing VMs:
 - kmaster-1 (for master/control plane node)
 - kworker-1 (for worker node)
 
+To ssh into the VMs use:
+```
+vagrant ssh kclient
+```
+
 **Note** if you decide to update the IP or Name of the VMs in [Vagrantfile](Vagrantfile), then make sure to update the file [update-hosts.sh](update-hots.sh) accordingly. And the VMs created by vagrant has default user name as vagrant and password as vagrant, also the root password is vagrant.
 
 ## TOC
